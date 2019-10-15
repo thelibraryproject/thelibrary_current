@@ -11,4 +11,4 @@ mvn clean install
 
 # How to run this application
 
-You can launch the `main` of the `Libarary` class.
+You can launch the `main` of the `TheLibrary` class.
