@@ -5,19 +5,28 @@ import java.math.BigDecimal;
 public class Book {
 	private long id;
 	private String title;
-	private String author;
+	private Author author;
 	private BigDecimal price;
-	
-	public Book(long id, String title, String author) {
+	private Publisher publisher;
+
+	public Book(long id, String title, Author author) {
 		this.id = id;
 		this.title = title;
 		this.author = author;
 	}
 
-	public Book(long id, String title, String author, BigDecimal price) {
+	public Book(long id, String title, Author author, BigDecimal price) {
 		this.id = id;
 		this.title = title;
 		this.author = author;
+		this.price = price;
+	}
+
+	public Book(long id, String title, Author author, Publisher publisher, BigDecimal price) {
+		this.id = id;
+		this.title = title;
+		this.author = author;
+		this.publisher = publisher;
 		this.price = price;
 	}
 
@@ -37,12 +46,20 @@ public class Book {
 		this.title = title;
 	}
 
-	public String getAuthor() {
+	public Author getAuthor() {
 		return author;
 	}
 
-	public void setAuthor(String author) {
+	public void setAuthor(Author author) {
 		this.author = author;
+	}
+
+	public Publisher getPublisher() {
+		return publisher;
+	}
+
+	public void setPublisher(Publisher publisher) {
+		this.publisher = publisher;
 	}
 
 	public BigDecimal getPrice() {
@@ -53,11 +70,10 @@ public class Book {
 		this.price = price;
 	}
 
-	@Override	
+	@Override
 	public String toString() {
-		return "Book [id=" + id + ", title=" + title + ", author=" + author + ", price=" + price + "]";
+		return "Book [id=" + id + ", title=" + title + ", author=" + author + ", price=" + price + ", publisher="
+				+ publisher + "]";
 	}
-
-	
 
 }
