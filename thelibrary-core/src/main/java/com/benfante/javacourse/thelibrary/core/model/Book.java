@@ -1,33 +1,55 @@
 package com.benfante.javacourse.thelibrary.core.model;
 
 import java.math.BigDecimal;
+import java.util.Arrays;
 
 public class Book {
 	private long id;
 	private String title;
-	private Author author;
+	private Author[] authors;
 	private BigDecimal price;
 	private Publisher publisher;
 
 	public Book(long id, String title, Author author) {
 		this.id = id;
 		this.title = title;
-		this.author = author;
+		this.authors = new Author[] { author };
 	}
 
 	public Book(long id, String title, Author author, BigDecimal price) {
 		this.id = id;
 		this.title = title;
-		this.author = author;
+		this.authors = new Author[] { author };
 		this.price = price;
 	}
 
 	public Book(long id, String title, Author author, Publisher publisher, BigDecimal price) {
 		this.id = id;
 		this.title = title;
-		this.author = author;
+		this.authors = new Author[] { author };
 		this.publisher = publisher;
 		this.price = price;
+	}
+
+	public Book(long id, String title, Author[] authors, Publisher publisher, BigDecimal price) {
+		this.id = id;
+		this.title = title;
+		this.authors = authors != null ? authors : new Author[0];
+		this.publisher = publisher;
+		this.price = price;
+	}
+
+	public Book(long id, String title, Author[] authors, BigDecimal price) {
+		this.id = id;
+		this.title = title;
+		this.authors = authors != null ? authors : new Author[0];
+		this.price = price;
+	}
+
+	public Book(long id, String title, Author[] authors) {
+		this.id = id;
+		this.title = title;
+		this.authors = authors != null ? authors : new Author[0];
 	}
 
 	public long getId() {
@@ -46,12 +68,12 @@ public class Book {
 		this.title = title;
 	}
 
-	public Author getAuthor() {
-		return author;
+	public Author[] getAuthors() {
+		return authors;
 	}
 
-	public void setAuthor(Author author) {
-		this.author = author;
+	public void setAuthors(Author[] authors) {
+		this.authors = authors;
 	}
 
 	public Publisher getPublisher() {
@@ -70,10 +92,26 @@ public class Book {
 		this.price = price;
 	}
 
+	public void addAuthor(Author author) {
+		Author[] largerAuthors = Arrays.copyOf(this.authors, this.authors.length + 1); // or using a for loop ;)
+		largerAuthors[largerAuthors.length - 1] = author;
+		this.authors = largerAuthors;
+	}
+
+	// just for showing the verbose method
+	public void addAuthorWithoutArrays(Author author) {
+		Author[] largerAuthors = new Author[this.authors.length + 1];
+		for(int i = 0; i < this.authors.length; i++) {
+			largerAuthors[i] = this.authors[i];
+		}
+		largerAuthors[largerAuthors.length - 1] = author;
+		this.authors = largerAuthors;
+	}
+	
 	@Override
 	public String toString() {
-		return "Book [id=" + id + ", title=" + title + ", author=" + author + ", price=" + price + ", publisher="
-				+ publisher + "]";
+		return "Book [id=" + id + ", title=" + title + ", authors=" + Arrays.toString(authors) + ", price=" + price
+				+ ", publisher=" + publisher + "]";
 	}
 
 }
