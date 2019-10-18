@@ -1,0 +1,48 @@
+y
+1
+Harry Potter
+0
+J.K.
+Rowling
+n
+-1
+0,0
+y
+2
+Dieci Piccoli Indiani
+1
+Agatha
+Christie
+n
+-1
+12,20
+y
+3
+Assassinio sull'Orient Express
+1
+Agatha
+Christie
+n
+-1
+10,20
+y
+5
+La pipa di Maigret
+4
+George
+Simenon
+n
+2
+Mondadori
+23,34
+y
+6
+La svastica sul sole
+5
+Philip K.
+Dick
+n
+3
+Sellerio
+12,23
+n

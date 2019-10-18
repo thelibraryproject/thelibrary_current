@@ -25,7 +25,7 @@ public class Library {
 
 	public void removeBook(Book book) {
 		int found = -1;
-		for(int i = 0; i < this.books.length; i++) {
+		for (int i = 0; i < this.books.length; i++) {
 			if (this.books[i].getId() == book.getId()) {
 				found = i;
 				break;
@@ -45,38 +45,60 @@ public class Library {
 			System.out.println(book);
 		}
 	}
-	
+
+	public Book[] searchBooksByTitle(String partialTitle) {
+		Book[] result = new Book[0];
+		for (Book book : this.books) {
+			if (book.getTitle().toLowerCase().contains(partialTitle.toLowerCase())) {
+				result = Arrays.copyOf(result, result.length + 1);
+				result[result.length - 1] = book;
+			}
+		}
+		return result;
+	}
+
+	public Book[] searchBooksByAuthor(Author author) {
+		Book[] result = new Book[0];
+		for (Book book : this.books) {
+			if (book.isWrittenBy(author)) {
+				result = Arrays.copyOf(result, result.length + 1);
+				result[result.length - 1] = book;
+			}
+		}
+		return result;
+	}
+
 	public static void main(String[] args) {
 		Library library = new Library();
-		
-		Author rowling = new Author(0, "J.K.", "Rowling");
-		Book b1 = new Book(1, "Harry Potter", rowling);
-		library.addBook(b1);
-		Author christie = new Author(1, "Agatha", "Christie");
-		Book b2 = new Book(2, "Dieci Piccoli Indiani", christie, new BigDecimal("12.20"));
-		library.addBook(b2);
-		Book b3 = new Book(3, "Assassinio sull'Orient Express", christie, new BigDecimal("10.20"));
-		library.addBook(b3);
 
 		Scanner scan = new Scanner(System.in);
 
 		String again = "";
 		while (!"y".equals(again) && !"n".equals(again)) {
-			System.out.print("Another book? (y/n) ");
+//			System.out.print("Another book? (y/n) ");
 			again = scan.nextLine();
 		}
 		while ("y".equals(again)) {
-			Book b5 = readBook(scan);
+			Book b5 = readBookWithoutMessages(scan);
 			library.addBook(b5);
 			do {
-				System.out.print("Again? (y/n) ");
+//				System.out.print("Again? (y/n) ");
 				again = scan.nextLine();
 			} while (!"y".equals(again) && !"n".equals(again));
 		}
-		System.out.println("Bye bye!");
+//		System.out.println("Bye bye!");
+		System.out.println("*********************************************");
+		System.out.println("** Printing all the archive...");
+		System.out.println("*********************************************");
 		library.printBooks();
+		System.out.println("*********************************************");
+		System.out.println("** Searching all Agatha Christie Books...");
+		System.out.println("*********************************************");
+		Book[] christieBooks = library.searchBooksByAuthor(new Author(1, "Agatha", "Christie"));
+		System.out.println(Arrays.toString(christieBooks));
 	}
 
+	@SuppressWarnings("unused")
 	private static Book readBook(Scanner scan) {
 		System.out.print("Id: ");
 		long id = scan.nextLong();
@@ -119,6 +141,36 @@ public class Library {
 		return result;
 	}
 
+	private static Book readBookWithoutMessages(Scanner scan) {
+		long id = scan.nextLong();
+		scan.skip(SKIPPED_CHARS);
+		String title = scan.nextLine();
+		Book result = new Book(id, title, new Author[0]);
+		String anotherAuthor = null;
+		do {
+			long authorId = scan.nextLong();
+			scan.skip(SKIPPED_CHARS);
+			String firstName = scan.nextLine();
+			String lastName = scan.nextLine();
+			Author author = new Author(authorId, firstName, lastName);
+			result.addAuthor(author);
+			anotherAuthor = scan.nextLine();
+		} while ("y".equals(anotherAuthor));
+		long publisherId = scan.nextLong();
+		scan.skip(SKIPPED_CHARS);
+		Publisher publisher = null;
+		if (publisherId != -1) {
+			String name = scan.nextLine();
+			publisher = new Publisher(publisherId, name);
+		}
+		result.setPublisher(publisher);
+		BigDecimal price = scan.nextBigDecimal();
+		scan.skip(SKIPPED_CHARS);
+		result.setPrice(price);
+		return result;
+	}
+
+	@SuppressWarnings("unused")
 	private static void printBook(Book book) {
 		System.out.println(book);
 	}

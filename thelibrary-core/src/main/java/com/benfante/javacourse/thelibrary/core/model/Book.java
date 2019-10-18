@@ -108,6 +108,15 @@ public class Book {
 		this.authors = largerAuthors;
 	}
 	
+	public boolean isWrittenBy(Author author) {
+		for (Author current : this.authors) {
+			if (current.getId() == author.getId()) {
+				return true;
+			}
+		}
+		return false;
+	}	
+	
 	@Override
 	public String toString() {
 		return "Book [id=" + id + ", title=" + title + ", authors=" + Arrays.toString(authors) + ", price=" + price
