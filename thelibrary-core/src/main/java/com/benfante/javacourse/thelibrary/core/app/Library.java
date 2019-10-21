@@ -4,11 +4,16 @@ import java.math.BigDecimal;
 import java.util.Arrays;
 import java.util.Scanner;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.benfante.javacourse.thelibrary.core.model.Author;
 import com.benfante.javacourse.thelibrary.core.model.Book;
 import com.benfante.javacourse.thelibrary.core.model.Publisher;
 
 public class Library {
+
+	private static final Logger log = LoggerFactory.getLogger(Library.class);
 
 	private static final String SKIPPED_CHARS = "(\r\n|[\n\r\u2028\u2029\u0085])?";
 
@@ -16,17 +21,20 @@ public class Library {
 
 	public void addBook(Book book) {
 		if (book != null) {
+			log.info("Adding a book with id {} and title {}", book.getId(), book.getTitle());
 			this.books = Arrays.copyOf(this.books, this.books.length + 1);
 			this.books[this.books.length - 1] = book;
 		} else {
-			System.out.println("WARNING: passed null adding a book. Nothing was really added.");
+			log.warn("Passed null adding a book. Nothing was really added.");
 		}
 	}
 
 	public void removeBook(Book book) {
+		log.info("Trying to remove the book with id {} ({})", book.getId(), book.getTitle());
 		int found = -1;
 		for (int i = 0; i < this.books.length; i++) {
 			if (this.books[i].getId() == book.getId()) {
+				log.debug("Found book with id {}", book.getId());
 				found = i;
 				break;
 			}
@@ -36,6 +44,7 @@ public class Library {
 			System.arraycopy(this.books, 0, shortedBooks, 0, found);
 			System.arraycopy(this.books, found + 1, shortedBooks, found, shortedBooks.length - found);
 			this.books = shortedBooks;
+			log.info("Removed the book with id {} ({})", book.getId(), book.getTitle());
 		}
 	}
 
@@ -47,6 +56,7 @@ public class Library {
 	}
 
 	public Book[] searchBooksByTitle(String partialTitle) {
+		log.debug("Searching books with title containing \"{}\"", partialTitle);
 		Book[] result = new Book[0];
 		for (Book book : this.books) {
 			if (book.getTitle().toLowerCase().contains(partialTitle.toLowerCase())) {
@@ -54,10 +64,12 @@ public class Library {
 				result[result.length - 1] = book;
 			}
 		}
+		log.debug("Found {} books", result.length);
 		return result;
 	}
 
 	public Book[] searchBooksByAuthor(Author author) {
+		log.debug("Searching books written by an author with id {}", author.getId());
 		Book[] result = new Book[0];
 		for (Book book : this.books) {
 			if (book.isWrittenBy(author)) {
@@ -65,6 +77,7 @@ public class Library {
 				result[result.length - 1] = book;
 			}
 		}
+		log.debug("Found {} books", result.length);
 		return result;
 	}
 

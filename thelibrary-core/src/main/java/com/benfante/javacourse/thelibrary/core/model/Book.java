@@ -3,7 +3,12 @@ package com.benfante.javacourse.thelibrary.core.model;
 import java.math.BigDecimal;
 import java.util.Arrays;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 public class Book {
+	private static final Logger log = LoggerFactory.getLogger(Book.class);
+	
 	private long id;
 	private String title;
 	private Author[] authors;
@@ -93,6 +98,7 @@ public class Book {
 	}
 
 	public void addAuthor(Author author) {
+		log.info("Adding author ({}, {}, {}) to the book with id {} ({})", author.getId(), author.getFirstName(), author.getLastName(), this.id, this.title);
 		Author[] largerAuthors = Arrays.copyOf(this.authors, this.authors.length + 1); // or using a for loop ;)
 		largerAuthors[largerAuthors.length - 1] = author;
 		this.authors = largerAuthors;
