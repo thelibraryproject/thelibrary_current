@@ -19,7 +19,7 @@ public class Library {
 
 	Book[] books = new Book[0];
 
-	public void addBook(Book book) {
+	public void addBook(final Book book) {
 		if (book != null) {
 			log.info("Adding a book with id {} and title {}", book.getId(), book.getTitle());
 			this.books = Arrays.copyOf(this.books, this.books.length + 1);
@@ -29,6 +29,7 @@ public class Library {
 		}
 	}
 
+	
 	public void removeBook(Book book) {
 		log.info("Trying to remove the book with id {} ({})", book.getId(), book.getTitle());
 		int found = -1;

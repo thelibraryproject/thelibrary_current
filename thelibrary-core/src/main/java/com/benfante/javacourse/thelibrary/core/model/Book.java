@@ -16,24 +16,15 @@ public class Book {
 	private Publisher publisher;
 
 	public Book(long id, String title, Author author) {
-		this.id = id;
-		this.title = title;
-		this.authors = new Author[] { author };
+		this.publisher = null;
 	}
 
 	public Book(long id, String title, Author author, BigDecimal price) {
-		this.id = id;
-		this.title = title;
-		this.authors = new Author[] { author };
-		this.price = price;
+		this(id, title, author, null, price);
 	}
 
 	public Book(long id, String title, Author author, Publisher publisher, BigDecimal price) {
-		this.id = id;
-		this.title = title;
-		this.authors = new Author[] { author };
-		this.publisher = publisher;
-		this.price = price;
+		this(id, title, author != null ? new Author[] { author } : null, publisher, price);
 	}
 
 	public Book(long id, String title, Author[] authors, Publisher publisher, BigDecimal price) {
@@ -45,16 +36,11 @@ public class Book {
 	}
 
 	public Book(long id, String title, Author[] authors, BigDecimal price) {
-		this.id = id;
-		this.title = title;
-		this.authors = authors != null ? authors : new Author[0];
-		this.price = price;
+		this(id, title, authors, null, price);
 	}
 
 	public Book(long id, String title, Author[] authors) {
-		this.id = id;
-		this.title = title;
-		this.authors = authors != null ? authors : new Author[0];
+		this(id, title, authors, null, null);
 	}
 
 	public long getId() {
