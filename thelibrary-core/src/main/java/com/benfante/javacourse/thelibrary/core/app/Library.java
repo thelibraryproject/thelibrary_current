@@ -1,5 +1,11 @@
 package com.benfante.javacourse.thelibrary.core.app;
 
+import java.io.BufferedInputStream;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.InputStream;
 import java.math.BigDecimal;
 import java.util.Arrays;
 import java.util.Scanner;
@@ -82,10 +88,15 @@ public class Library {
 		return result;
 	}
 
-	public static void main(String[] args) {
+	public static void main(String[] args) throws IOException {
 		Library library = new Library();
 
-		Scanner scan = new Scanner(System.in);
+		String pathname = "C:\\books.txt";
+		File file = new File(pathname);
+		InputStream fis = new FileInputStream(file);
+		InputStream is = new BufferedInputStream(fis);
+		
+		Scanner scan = new Scanner(is);
 
 		String again = "";
 		while (!"y".equals(again) && !"n".equals(again)) {
@@ -100,6 +111,9 @@ public class Library {
 				again = scan.nextLine();
 			} while (!"y".equals(again) && !"n".equals(again));
 		}
+		
+		fis.close();
+		
 //		System.out.println("Bye bye!");
 		System.out.println("*********************************************");
 		System.out.println("** Printing all the archive...");
