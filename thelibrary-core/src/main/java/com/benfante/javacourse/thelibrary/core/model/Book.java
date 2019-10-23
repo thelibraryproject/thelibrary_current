@@ -2,13 +2,14 @@ package com.benfante.javacourse.thelibrary.core.model;
 
 import java.math.BigDecimal;
 import java.util.Arrays;
+import java.util.Objects;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 public class Book {
 	private static final Logger log = LoggerFactory.getLogger(Book.class);
-	
+
 	private long id;
 	private String title;
 	private Author[] authors;
@@ -16,7 +17,7 @@ public class Book {
 	private Publisher publisher;
 
 	public Book(long id, String title, Author author) {
-		this.publisher = null;
+		this(id, title, author, null, null);
 	}
 
 	public Book(long id, String title, Author author, BigDecimal price) {
@@ -84,7 +85,8 @@ public class Book {
 	}
 
 	public void addAuthor(Author author) {
-		log.info("Adding author ({}, {}, {}) to the book with id {} ({})", author.getId(), author.getFirstName(), author.getLastName(), this.id, this.title);
+		log.info("Adding author ({}, {}, {}) to the book with id {} ({})", author.getId(), author.getFirstName(),
+				author.getLastName(), this.id, this.title);
 		Author[] largerAuthors = Arrays.copyOf(this.authors, this.authors.length + 1); // or using a for loop ;)
 		largerAuthors[largerAuthors.length - 1] = author;
 		this.authors = largerAuthors;
@@ -93,22 +95,40 @@ public class Book {
 	// just for showing the verbose method
 	public void addAuthorWithoutArrays(Author author) {
 		Author[] largerAuthors = new Author[this.authors.length + 1];
-		for(int i = 0; i < this.authors.length; i++) {
+		for (int i = 0; i < this.authors.length; i++) {
 			largerAuthors[i] = this.authors[i];
 		}
 		largerAuthors[largerAuthors.length - 1] = author;
 		this.authors = largerAuthors;
 	}
-	
+
 	public boolean isWrittenBy(Author author) {
+		int otherHashCode = author.hashCode();
 		for (Author current : this.authors) {
-			if (current.getId() == author.getId()) {
+			if (current.hashCode() == otherHashCode && current.equals(author)) {
 				return true;
 			}
 		}
 		return false;
-	}	
-	
+	}
+
+	@Override
+	public int hashCode() {
+		return Objects.hash(id);
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		Book other = (Book) obj;
+		return id == other.id;
+	}
+
 	@Override
 	public String toString() {
 		return "Book [id=" + id + ", title=" + title + ", authors=" + Arrays.toString(authors) + ", price=" + price
