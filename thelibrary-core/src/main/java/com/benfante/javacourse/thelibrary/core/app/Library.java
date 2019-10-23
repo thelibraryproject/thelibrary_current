@@ -1,11 +1,17 @@
 package com.benfante.javacourse.thelibrary.core.app;
 
 import java.io.BufferedInputStream;
+import java.io.BufferedOutputStream;
+import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.OutputStream;
+import java.io.PrintWriter;
+import java.io.Reader;
 import java.math.BigDecimal;
 import java.util.Arrays;
 import java.util.Scanner;
@@ -88,33 +94,101 @@ public class Library {
 		return result;
 	}
 
+	public void readBooks(InputStream is) throws IOException {
+		Reader isr = new InputStreamReader(is);
+		BufferedReader r = new BufferedReader(isr);
+		String line = null;
+		while((line = r.readLine()) != null) {
+			String[] bookFields = line.split(",");
+			long id = Long.valueOf(bookFields[0]);
+			String title = bookFields[1];
+			Book book = new Book(id, title, (Author)null);
+			if (!bookFields[2].isBlank()) {
+				log.trace(bookFields[2]);
+				String[] authors = bookFields[2].split("\\|");
+				for (String author : authors) {
+					log.trace(author);
+					String[] authorFields = author.split(";");
+					book.addAuthor(new Author(Long.valueOf(authorFields[0]), authorFields[1], authorFields[2]));
+				}
+			}
+			if (!bookFields[3].isBlank()) {
+				String[] publisherFields = bookFields[3].split(";");
+				book.setPublisher(new Publisher(Long.valueOf(publisherFields[0]), publisherFields[1]));
+			}
+			if (!bookFields[4].isBlank()) {
+				book.setPrice(new BigDecimal(bookFields[4]));
+			}
+			this.addBook(book);
+		}
+	}
+	
+
+	public void writeBooks(OutputStream os) {
+		PrintWriter out = new PrintWriter(os);
+		for (Book book : this.books) {
+			out.print(book.getId());
+			out.print(',');
+			out.print(book.getTitle());
+			out.print(',');
+			for (int i = 0; i < book.getAuthors().length; i++) {
+				Author author = book.getAuthors()[i];
+				out.print(author.getId());
+				out.print(';');
+				out.print(author.getFirstName());
+				out.print(';');
+				out.print(author.getLastName());
+				if (i != book.getAuthors().length -1) {
+					out.print('|');
+				}
+			}
+			out.print(',');
+			Publisher publisher = book.getPublisher();
+			if (publisher != null) {
+				out.print(publisher.getId());
+				out.print(';');
+				out.print(publisher.getName());
+			}
+			out.print(',');
+			out.print(book.getPrice());
+			out.println();
+		}
+		out.flush();
+	}
+	
 	public static void main(String[] args) throws IOException {
 		Library library = new Library();
 
-		String pathname = "C:\\books.txt";
-		File file = new File(pathname);
-		InputStream fis = new FileInputStream(file);
-		InputStream is = new BufferedInputStream(fis);
+		String userHome = System.getProperty("user.home");
+		String filename = "library.csv";
+		File file = new File(userHome, filename);
+		if (file.exists()) {
+			log.info("Reading books from {}", file.getAbsolutePath());
+			try (InputStream fis = new FileInputStream(file);
+					InputStream is = new BufferedInputStream(fis);) {
+				library.readBooks(is);
+			}
+		} else {
+			log.warn("The file {} doesn't exist", file.getAbsolutePath());
+		}
 		
-		Scanner scan = new Scanner(is);
+		Scanner scan = new Scanner(System.in);
 
 		String again = "";
 		while (!"y".equals(again) && !"n".equals(again)) {
-//			System.out.print("Another book? (y/n) ");
+			System.out.print("Another book? (y/n) ");
 			again = scan.nextLine();
 		}
 		while ("y".equals(again)) {
-			Book b5 = readBookWithoutMessages(scan);
+			Book b5 = readBook(scan);
 			library.addBook(b5);
 			do {
-//				System.out.print("Again? (y/n) ");
+				System.out.print("Again? (y/n) ");
 				again = scan.nextLine();
 			} while (!"y".equals(again) && !"n".equals(again));
 		}
 		
-		fis.close();
-		
-//		System.out.println("Bye bye!");
+		System.out.println("Bye bye!");
 		System.out.println("*********************************************");
 		System.out.println("** Printing all the archive...");
 		System.out.println("*********************************************");
@@ -124,9 +198,13 @@ public class Library {
 		System.out.println("*********************************************");
 		Book[] christieBooks = library.searchBooksByAuthor(new Author(1, "Agatha", "Christie"));
 		System.out.println(Arrays.toString(christieBooks));
+
+		log.info("Storing the book archive into the file {}", file.getAbsolutePath());
+		try (OutputStream os = new BufferedOutputStream(new FileOutputStream(file))) {
+			library.writeBooks(os);
+		}
 	}
 
-	@SuppressWarnings("unused")
 	private static Book readBook(Scanner scan) {
 		System.out.print("Id: ");
 		long id = scan.nextLong();
@@ -169,6 +247,7 @@ public class Library {
 		return result;
 	}
 
+	@SuppressWarnings("unused")
 	private static Book readBookWithoutMessages(Scanner scan) {
 		long id = scan.nextLong();
 		scan.skip(SKIPPED_CHARS);

@@ -2,6 +2,9 @@ package com.benfante.javacourse.thelibrary.core.app;
 
 import static org.junit.Assert.*;
 
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
 import java.math.BigDecimal;
 
 import org.junit.Before;
@@ -9,6 +12,7 @@ import org.junit.Test;
 
 import com.benfante.javacourse.thelibrary.core.model.Author;
 import com.benfante.javacourse.thelibrary.core.model.Book;
+import com.benfante.javacourse.thelibrary.core.model.Publisher;
 
 public class LibraryTest {
 	private Library library;
@@ -56,4 +60,49 @@ public class LibraryTest {
 		assertEquals(2, result.length);
 	}
 
+	
+	@Test
+	public void testReadBooks() throws IOException {
+		Library app = new Library();
+		
+		InputStream is = this.getClass().getClassLoader().getResourceAsStream("library.csv");
+		
+		app.readBooks(is);
+		
+		assertEquals(5, app.books.length);
+		assertEquals(1, app.books[0].getId());
+		assertEquals("Harry Potter", app.books[0].getTitle());
+		assertEquals(1, app.books[0].getAuthors().length);
+		assertEquals(2, app.books[4].getAuthors().length);
+		assertNull(app.books[0].getPublisher());
+		assertNotNull(app.books[4].getPublisher());
+		assertEquals(new BigDecimal("0.0"), app.books[0].getPrice());
+		assertEquals(new BigDecimal("44.71"), app.books[4].getPrice());
+	}
+	
+	@Test
+	public void testWriteGof() throws IOException {
+		Book book = new Book(5, "Design Patterns",
+				new Author[] {
+						new Author(3, "Erich", "Gamma"),
+						new Author(4, "Richard", "Helm")
+				},
+				new Publisher(1, "Addison-Wesley Professional"),
+				new BigDecimal("44.71"));
+		
+		Library app = new Library();
+		app.addBook(book);
+		
+		String result = null;
+		try (ByteArrayOutputStream os = new ByteArrayOutputStream();) {
+			app.writeBooks(os);
+			result = os.toString();
+		}
+		
+		String expected = "5,Design Patterns,3;Erich;Gamma|4;Richard;Helm,1;Addison-Wesley Professional,44.71"
+				+System.getProperty("line.separator");
+
+		assertEquals(expected, result);
+	}
+	
 }
