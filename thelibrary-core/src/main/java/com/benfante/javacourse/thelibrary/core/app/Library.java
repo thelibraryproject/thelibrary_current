@@ -13,7 +13,11 @@ import java.io.OutputStream;
 import java.io.PrintWriter;
 import java.io.Reader;
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
+import java.util.HashSet;
+import java.util.List;
 import java.util.Scanner;
 
 import org.slf4j.Logger;
@@ -29,13 +33,12 @@ public class Library {
 
 	private static final String SKIPPED_CHARS = "(\r\n|[\n\r\u2028\u2029\u0085])?";
 
-	Book[] books = new Book[0];
+	Collection<Book> books = new HashSet<>();
 
 	public void addBook(final Book book) {
 		if (book != null) {
 			log.info("Adding a book with id {} and title {}", book.getId(), book.getTitle());
-			this.books = Arrays.copyOf(this.books, this.books.length + 1);
-			this.books[this.books.length - 1] = book;
+			this.books.add(book);
 		} else {
 			log.warn("Passed null adding a book. Nothing was really added.");
 		}
@@ -44,20 +47,11 @@ public class Library {
 	
 	public void removeBook(Book book) {
 		log.info("Trying to remove the book with id {} ({})", book.getId(), book.getTitle());
-		int found = -1;
-		for (int i = 0; i < this.books.length; i++) {
-			if (this.books[i].getId() == book.getId()) {
-				log.debug("Found book with id {}", book.getId());
-				found = i;
-				break;
-			}
-		}
-		if (found != -1) {
-			Book[] shortedBooks = new Book[this.books.length - 1];
-			System.arraycopy(this.books, 0, shortedBooks, 0, found);
-			System.arraycopy(this.books, found + 1, shortedBooks, found, shortedBooks.length - found);
-			this.books = shortedBooks;
+		if (this.books.contains(book)) {
+			this.books.remove(book);
 			log.info("Removed the book with id {} ({})", book.getId(), book.getTitle());
+		} else {
+			log.warn("Book with id {} ({}) not found", book.getId(), book.getTitle());
 		}
 	}
 
@@ -70,28 +64,26 @@ public class Library {
 
 	public Book[] searchBooksByTitle(String partialTitle) {
 		log.debug("Searching books with title containing \"{}\"", partialTitle);
-		Book[] result = new Book[0];
+		List<Book> result = new ArrayList<>();
 		for (Book book : this.books) {
 			if (book.getTitle().toLowerCase().contains(partialTitle.toLowerCase())) {
-				result = Arrays.copyOf(result, result.length + 1);
-				result[result.length - 1] = book;
+				result.add(book);
 			}
 		}
-		log.debug("Found {} books", result.length);
-		return result;
+		log.debug("Found {} books", result.size());
+		return result.toArray(new Book[result.size()]);
 	}
 
 	public Book[] searchBooksByAuthor(Author author) {
 		log.debug("Searching books written by an author with id {}", author.getId());
-		Book[] result = new Book[0];
+		List<Book> result = new ArrayList<>();
 		for (Book book : this.books) {
 			if (book.isWrittenBy(author)) {
-				result = Arrays.copyOf(result, result.length + 1);
-				result[result.length - 1] = book;
+				result.add(book);
 			}
 		}
-		log.debug("Found {} books", result.length);
-		return result;
+		log.debug("Found {} books", result.size());
+		return result.toArray(new Book[result.size()]);
 	}
 
 	public void readBooks(InputStream is) throws IOException {

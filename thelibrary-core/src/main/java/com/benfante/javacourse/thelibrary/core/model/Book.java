@@ -1,18 +1,20 @@
 package com.benfante.javacourse.thelibrary.core.model;
 
 import java.math.BigDecimal;
-import java.util.Arrays;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 import java.util.Objects;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public class Book {
+public class Book implements Comparable<Book> {
 	private static final Logger log = LoggerFactory.getLogger(Book.class);
 
 	private long id;
 	private String title;
-	private Author[] authors;
+	private List<Author> authors;
 	private BigDecimal price;
 	private Publisher publisher;
 
@@ -31,7 +33,10 @@ public class Book {
 	public Book(long id, String title, Author[] authors, Publisher publisher, BigDecimal price) {
 		this.id = id;
 		this.title = title;
-		this.authors = authors != null ? authors : new Author[0];
+		this.authors = new ArrayList<>();
+		if (authors != null) {
+			Collections.addAll(this.authors, authors);
+		}
 		this.publisher = publisher;
 		this.price = price;
 	}
@@ -61,11 +66,12 @@ public class Book {
 	}
 
 	public Author[] getAuthors() {
-		return authors;
+		return authors.toArray(new Author[0]);
 	}
 
 	public void setAuthors(Author[] authors) {
-		this.authors = authors;
+		this.authors.clear();
+		Collections.addAll(this.authors, authors);
 	}
 
 	public Publisher getPublisher() {
@@ -87,19 +93,7 @@ public class Book {
 	public void addAuthor(Author author) {
 		log.info("Adding author ({}, {}, {}) to the book with id {} ({})", author.getId(), author.getFirstName(),
 				author.getLastName(), this.id, this.title);
-		Author[] largerAuthors = Arrays.copyOf(this.authors, this.authors.length + 1); // or using a for loop ;)
-		largerAuthors[largerAuthors.length - 1] = author;
-		this.authors = largerAuthors;
-	}
-
-	// just for showing the verbose method
-	public void addAuthorWithoutArrays(Author author) {
-		Author[] largerAuthors = new Author[this.authors.length + 1];
-		for (int i = 0; i < this.authors.length; i++) {
-			largerAuthors[i] = this.authors[i];
-		}
-		largerAuthors[largerAuthors.length - 1] = author;
-		this.authors = largerAuthors;
+		this.authors.add(author);
 	}
 
 	public boolean isWrittenBy(Author author) {
@@ -131,8 +125,14 @@ public class Book {
 
 	@Override
 	public String toString() {
-		return "Book [id=" + id + ", title=" + title + ", authors=" + Arrays.toString(authors) + ", price=" + price
+		return "Book [id=" + id + ", title=" + title + ", authors=" + authors + ", price=" + price
 				+ ", publisher=" + publisher + "]";
+	}
+
+	@Override
+	public int compareTo(Book o) {
+//		return Long.valueOf(this.id).compareTo(o.id);
+		return (int)(this.id - o.id);
 	}
 
 }

@@ -33,18 +33,18 @@ public class LibraryTest {
 
 	@Test
 	public void testAddBook() {
-		int previousSize = library.books.length;
+		int previousSize = library.books.size();
 		library.addBook(new Book(0, "A book for testing", new Author[0]));
-		assertEquals(previousSize + 1, library.books.length);
+		assertEquals(previousSize + 1, library.books.size());
 	}
 
 	@Test
 	public void testRemoveBook() {
 		Book book = new Book(0, "A book for testing", new Author[0]);
 		library.addBook(book);
-		int previousSize = library.books.length;
+		int previousSize = library.books.size();
 		library.removeBook(book);
-		assertEquals(previousSize - 1, library.books.length);
+		assertEquals(previousSize - 1, library.books.size());
 	}
 
 	@Test
@@ -69,15 +69,17 @@ public class LibraryTest {
 		
 		app.readBooks(is);
 		
-		assertEquals(5, app.books.length);
-		assertEquals(1, app.books[0].getId());
-		assertEquals("Harry Potter", app.books[0].getTitle());
-		assertEquals(1, app.books[0].getAuthors().length);
-		assertEquals(2, app.books[4].getAuthors().length);
-		assertNull(app.books[0].getPublisher());
-		assertNotNull(app.books[4].getPublisher());
-		assertEquals(new BigDecimal("0.0"), app.books[0].getPrice());
-		assertEquals(new BigDecimal("44.71"), app.books[4].getPrice());
+		Book[] booksAsArray = app.books.toArray(new Book[app.books.size()]);
+		
+		assertEquals(5, booksAsArray.length);
+		assertEquals(1, booksAsArray[0].getId());
+		assertEquals("Harry Potter", booksAsArray[0].getTitle());
+		assertEquals(1, booksAsArray[0].getAuthors().length);
+		assertEquals(2, booksAsArray[4].getAuthors().length);
+		assertNull(booksAsArray[0].getPublisher());
+		assertNotNull(booksAsArray[4].getPublisher());
+		assertEquals(new BigDecimal("0.0"), booksAsArray[0].getPrice());
+		assertEquals(new BigDecimal("44.71"), booksAsArray[4].getPrice());
 	}
 	
 	@Test
