@@ -5,6 +5,7 @@ import java.io.BufferedOutputStream;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -23,6 +24,9 @@ import java.util.Scanner;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.benfante.javacourse.thelibrary.core.dao.AuthorDao;
+import com.benfante.javacourse.thelibrary.core.dao.DaoFactory;
+import com.benfante.javacourse.thelibrary.core.dao.DaoFactoryCreator;
 import com.benfante.javacourse.thelibrary.core.model.Author;
 import com.benfante.javacourse.thelibrary.core.model.Book;
 import com.benfante.javacourse.thelibrary.core.model.Publisher;
@@ -150,7 +154,14 @@ public class Library {
 	
 	public static void main(String[] args) throws IOException {
 		Library library = new Library();
+		
+//		readingFromCsvFile(library);
+		
+		usingDaos();
+	}
 
+
+	private static void readingFromCsvFile(Library library) throws IOException, FileNotFoundException {
 		String userHome = System.getProperty("user.home");
 		String filename = "library.csv";
 		File file = new File(userHome, filename);
@@ -197,6 +208,14 @@ public class Library {
 		}
 	}
 
+	
+	private static void usingDaos() {
+		DaoFactory daoFactory = DaoFactoryCreator.getDaoFactory();
+		AuthorDao authorDao = daoFactory.getAuthorDao();
+		Author author = authorDao.searchAuthorByFirstNameAndLastName("Agatha", "Christie");
+		System.out.println(author);
+	}
+	
 	private static Book readBook(Scanner scan) {
 		System.out.print("Id: ");
 		long id = scan.nextLong();

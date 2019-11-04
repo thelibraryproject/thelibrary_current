@@ -9,7 +9,7 @@ import java.util.logging.Logger;
 
 import javax.sql.DataSource;
 
-class ConnectionSource implements DataSource {
+public class ConnectionSource implements DataSource {
 	private String connectionUrl;
 	private String username;
 	private String password;
