@@ -43,8 +43,12 @@ public class MySqlAuthorDao implements AuthorDao {
 		return result;
 	}
 
+	/**
+	 * 
+	 * @throws RuntimeException in case of error
+	 */
 	@Override
-	public Author searchAuthorByFirstNameAndLastName(String firstName, String lastName) {
+	public Author searchAuthorByFirstNameAndLastName(String firstName, String lastName) throws RuntimeException {
 		Author result = null;
 		try (Connection conn = this.dataSource.getConnection();
 				PreparedStatement stmt = conn.prepareStatement(

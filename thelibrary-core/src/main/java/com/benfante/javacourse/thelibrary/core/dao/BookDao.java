@@ -9,6 +9,6 @@ public interface BookDao {
 	Collection<Book> getAllBooks();
 	Book searchBookByIsbn(String isbn);
 	Book[] searchBooksByTitle(String title);
-	Book[] searchBooksBtAuthor(Author author);
+	Book[] searchBooksByAuthor(Author author);
 	void store(Book book);
 }

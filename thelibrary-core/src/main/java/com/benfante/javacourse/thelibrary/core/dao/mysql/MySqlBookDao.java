@@ -30,7 +30,7 @@ public class MySqlBookDao implements BookDao {
 	}
 
 	@Override
-	public Book[] searchBooksBtAuthor(Author author) {
+	public Book[] searchBooksByAuthor(Author author) {
 		throw new UnsupportedOperationException();
 	}
 
