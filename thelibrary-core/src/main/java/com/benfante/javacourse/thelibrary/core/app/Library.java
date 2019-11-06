@@ -25,6 +25,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.benfante.javacourse.thelibrary.core.dao.AuthorDao;
+import com.benfante.javacourse.thelibrary.core.dao.BookDao;
 import com.benfante.javacourse.thelibrary.core.dao.DaoFactory;
 import com.benfante.javacourse.thelibrary.core.dao.DaoFactoryCreator;
 import com.benfante.javacourse.thelibrary.core.model.Author;
@@ -199,7 +200,7 @@ public class Library {
 		System.out.println("*********************************************");
 		System.out.println("** Searching all Agatha Christie Books...");
 		System.out.println("*********************************************");
-		Book[] christieBooks = library.searchBooksByAuthor(new Author(1, "Agatha", "Christie"));
+		Book[] christieBooks = library.searchBooksByAuthor(new Author(1L, "Agatha", "Christie"));
 		System.out.println(Arrays.toString(christieBooks));
 
 		log.info("Storing the book archive into the file {}", file.getAbsolutePath());
@@ -211,9 +212,9 @@ public class Library {
 	
 	private static void usingDaos() {
 		DaoFactory daoFactory = DaoFactoryCreator.getDaoFactory();
-		AuthorDao authorDao = daoFactory.getAuthorDao();
-		Author author = authorDao.searchAuthorByFirstNameAndLastName("Agatha", "Christie");
-		System.out.println(author);
+		BookDao bookDao = daoFactory.getBookDao();
+		Collection<Book> books = bookDao.getAllBooks();
+		System.out.println(books);
 	}
 	
 	private static Book readBook(Scanner scan) {

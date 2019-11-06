@@ -15,8 +15,7 @@ public class JpaDaoFactory implements DaoFactory {
 
 	@Override
 	public BookDao getBookDao() {
-		// TODO Auto-generated method stub
-		return null;
+		return new JpaBookDao(emf);
 	}
 
 	@Override
