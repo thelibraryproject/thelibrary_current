@@ -6,6 +6,7 @@
 		<groupId>com.benfante.javacourse.thelibrary</groupId>
 		<artifactId>thelibrary-parent</artifactId>
 		<version>0.0.1-SNAPSHOT</version>
+		<relativePath/>
 	</parent>
 	<artifactId>thelibrary-core</artifactId>
 	<dependencies>

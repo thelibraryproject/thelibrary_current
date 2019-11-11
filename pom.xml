@@ -51,5 +51,6 @@
 	</dependencyManagement>
 	<modules>
 		<module>thelibrary-core</module>
+		<module>thelibrary-web</module>
 	</modules>
 </project>
