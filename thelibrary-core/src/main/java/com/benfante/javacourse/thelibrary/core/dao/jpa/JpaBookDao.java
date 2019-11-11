@@ -2,9 +2,13 @@ package com.benfante.javacourse.thelibrary.core.dao.jpa;
 
 import java.util.Collection;
 
+import javax.persistence.EntityGraph;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.TypedQuery;
+
+import org.hibernate.graph.GraphSemantic;
+import org.hibernate.jpa.QueryHints;
 
 import com.benfante.javacourse.thelibrary.core.dao.BookDao;
 import com.benfante.javacourse.thelibrary.core.model.Author;
@@ -23,7 +27,11 @@ public class JpaBookDao implements BookDao {
 		EntityManager em = null;
 		try {
 			em = emf.createEntityManager();
+			EntityGraph<Book> graph = em.createEntityGraph(Book.class);
+			graph.addAttributeNodes("authors");
+			
 			TypedQuery<Book> query = em.createQuery("SELECT b FROM Book b", Book.class);
+			query.setHint(GraphSemantic.LOAD.getJpaHintName(), graph);
 			result = query.getResultList();
 		} finally {
 			em.close();

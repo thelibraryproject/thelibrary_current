@@ -6,6 +6,8 @@
 	version="2.2">
 	<persistence-unit name="thelibrary">
 		<class>com.benfante.javacourse.thelibrary.core.model.Author</class>
+		<class>com.benfante.javacourse.thelibrary.core.model.Book</class>
+		<class>com.benfante.javacourse.thelibrary.core.model.Publisher</class>
 		<properties>
 			<property name="javax.persistence.jdbc.driver"
 				value="com.mysql.cj.jdbc.Driver" />

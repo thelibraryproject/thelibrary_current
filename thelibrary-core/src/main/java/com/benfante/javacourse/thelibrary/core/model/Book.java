@@ -7,9 +7,14 @@ import java.util.List;
 import java.util.Objects;
 
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
+import javax.persistence.ManyToOne;
 import javax.persistence.Transient;
 
 import org.slf4j.Logger;
@@ -23,10 +28,13 @@ public class Book implements Comparable<Book> {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 	private String title;
-	@Transient
+	@ManyToMany
+	@JoinTable(name = "book_author",
+		joinColumns = @JoinColumn(name="book_id"),
+		inverseJoinColumns = @JoinColumn(name="author_id"))
 	private List<Author> authors;
 	private BigDecimal price;
-	@Transient
+	@ManyToOne
 	private Publisher publisher;
 
 	public Book() {
@@ -94,6 +102,7 @@ public class Book implements Comparable<Book> {
 
 	public void setPublisher(Publisher publisher) {
 		this.publisher = publisher;
+		publisher.getBooks().add(this);
 	}
 
 	public BigDecimal getPrice() {
