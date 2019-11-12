@@ -26,6 +26,7 @@
 <body>
 	<c:url value="/" var="homeUrl" />
 	<c:url value="/books" var="booksUrl" />
+	<c:url value="/authors" var="authorsUrl" />
 
 	<!-- Navigation -->
 	<nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top">
@@ -42,6 +43,7 @@
 							<span class="sr-only">(current)</span>
 					</a></li>
 					<li class="nav-item"><a class="nav-link" href="${booksUrl}">Books</a></li>
+					<li class="nav-item"><a class="nav-link" href="${authorsUrl}">Authors</a></li>
 					<li class="nav-item"><a class="nav-link" href="#">About</a></li>
 					<li class="nav-item"><a class="nav-link" href="#">Services</a>
 					</li>

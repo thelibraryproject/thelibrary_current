@@ -1,13 +1,18 @@
 package com.benfante.javacourse.thelibrary.core.dao.jpa;
 
+import java.util.Collection;
 import java.util.List;
 
+import javax.persistence.EntityGraph;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.TypedQuery;
 
+import org.hibernate.graph.GraphSemantic;
+
 import com.benfante.javacourse.thelibrary.core.dao.AuthorDao;
 import com.benfante.javacourse.thelibrary.core.model.Author;
+import com.benfante.javacourse.thelibrary.core.model.Book;
 
 public class JpaAuthorDao implements AuthorDao {
 
@@ -51,6 +56,20 @@ public class JpaAuthorDao implements AuthorDao {
 			}
 		} finally {
 			if (em != null) em.close();
+		}
+		return result;
+	}
+
+	@Override
+	public Collection<Author> findAll() {
+		Collection<Author> result = null;
+		EntityManager em = null;
+		try {
+			em = emf.createEntityManager();
+			TypedQuery<Author> query = em.createQuery("SELECT b FROM Author b", Author.class);
+			result = query.getResultList();
+		} finally {
+			em.close();
 		}
 		return result;
 	}

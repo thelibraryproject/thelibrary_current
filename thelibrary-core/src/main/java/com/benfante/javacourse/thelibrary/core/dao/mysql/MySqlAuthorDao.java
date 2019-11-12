@@ -5,6 +5,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.Collection;
 
 import javax.sql.DataSource;
 
@@ -64,6 +65,12 @@ public class MySqlAuthorDao implements AuthorDao {
 			throw new RuntimeException(e);
 		}
 		return result;
+	}
+
+	@Override
+	public Collection<Author> findAll() {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 }
