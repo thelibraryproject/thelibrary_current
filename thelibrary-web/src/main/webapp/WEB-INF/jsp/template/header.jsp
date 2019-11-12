@@ -56,3 +56,8 @@
 
 	<!-- Page Content -->
 	<div class="container">
+	
+		<c:if test="${not empty message}">
+			<div class="alert alert-danger my-3" role="alert">${message}</div>
+		</c:if>
+	

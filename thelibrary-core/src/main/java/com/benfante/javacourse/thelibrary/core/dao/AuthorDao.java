@@ -8,4 +8,6 @@ public interface AuthorDao {
 	Author getOrCreateAuthor(String firstName, String lastName);
 	Author searchAuthorByFirstNameAndLastName(String firstName, String lastName);
 	Collection<Author> findAll();
+	void save(Author author);
+	Author findById(Long id);
 }

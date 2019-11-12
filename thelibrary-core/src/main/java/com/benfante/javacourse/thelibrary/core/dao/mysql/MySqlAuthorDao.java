@@ -73,4 +73,16 @@ public class MySqlAuthorDao implements AuthorDao {
 		return null;
 	}
 
+	@Override
+	public void save(Author author) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public Author findById(Long id) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
 }

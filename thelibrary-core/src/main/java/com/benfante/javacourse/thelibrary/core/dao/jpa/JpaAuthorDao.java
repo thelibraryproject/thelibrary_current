@@ -74,4 +74,32 @@ public class JpaAuthorDao implements AuthorDao {
 		return result;
 	}
 
+	@Override
+	public void save(Author author) {
+		EntityManager em = null;
+		try  {
+			em  = emf.createEntityManager();
+			em.getTransaction().begin();
+			em.merge(author);
+			em.getTransaction().commit();
+		} finally {
+			if (em != null) em.close();
+		}
+	}
+
+	@Override
+	public Author findById(Long id) {
+		Author result = null;
+		EntityManager em = null;
+		try  {
+			em  = emf.createEntityManager();
+			em.getTransaction().begin();
+			result = em.find(Author.class, id);
+			em.getTransaction().commit();
+		} finally {
+			if (em != null) em.close();
+		}
+		return result;
+	}
+
 }
